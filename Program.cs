@@ -19,6 +19,17 @@ builder.Services.AddSwaggerGen(options =>
         Description = "API para gestión de usuarios con ASP.NET Core y SQL Server"
     });
 });
+// Agregar CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", policy =>
+    {
+        policy.WithOrigins("http://localhost:5174", "http://localhost:5173")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -36,6 +47,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+// Usar CORS
+app.UseCors("AllowLocalhost");
+
 
 app.MapControllers();
 
